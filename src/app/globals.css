@@ -15,20 +15,23 @@
   --foreground: #ffffff;
 
   /* --- GRID SİSTEMİ AYARLARI --- */
-
-  /* VARSAYILAN (Mobil & Tablet) */
   /* Kenar Boşluğu: 20px */
   --margin: 20px;
-  /* Sütun Aralığı: 20px (Tüm cihazlarda sabit) */
+  /* Sütun Aralığı: 20px */
   --gutter: 20px;
 }
 
 @media (min-width: 1024px) {
   :root {
-    /* MASAÜSTÜ (Desktop) */
-    /* Kenar Boşluğu: 40px */
+    /* MASAÜSTÜ (Desktop) Margin: 40px */
     --margin: 40px;
   }
+}
+
+/* EKLEME: HTML'in zemin rengini garantiye alıyoruz (Blend Fix) */
+html {
+  background-color: var(--background);
+  scroll-behavior: smooth;
 }
 
 body {
@@ -38,64 +41,67 @@ body {
   font-weight: 300; /* GLOBAL LIGHT FONT */
   letter-spacing: -0.02em;
   line-height: 1.5;
-  overflow-x: hidden; /* Yatay taşmayı engelle */
+  overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  /* EKLEME: Sayfa yapısının katmanlarını sabitler */
+  min-height: 100vh;
+  position: relative;
 }
 
-/* --- TİPOGRAFİ STANDARTLARI (Akışkan / Fluid Yapı) --- */
+/* --- KRİTİK ÇÖZÜM: NAVBAR BLEND CLASS --- */
+/* Navbar.tsx içinde bu sınıfı kullanacağız */
+.nav-blend-target {
+  mix-blend-mode: exclusion !important; /* Difference yerine Exclusion daha kararlıdır */
+  color: #ffffff !important; /* Rengi SAF BEYAZ'a kilitler */
+  z-index: 9999;
+}
 
-/* Hero: Mobilde 40px -> Masaüstünde 80px */
+/* --- TİPOGRAFİ STANDARTLARI (Fluid Yapı) --- */
+
 .type-hero {
   font-size: clamp(2.5rem, 6vw, 5rem);
   line-height: 1.05;
   letter-spacing: -0.03em;
 }
 
-/* H1: Mobilde 32px -> Masaüstünde 48px */
 .type-h1 {
   font-size: clamp(2rem, 4vw, 3rem);
   line-height: 1.1;
   letter-spacing: -0.02em;
 }
 
-/* H2: Mobilde 24px -> Masaüstünde 36px */
 .type-h2 {
   font-size: clamp(1.5rem, 3vw, 2.25rem);
   line-height: 1.2;
 }
 
-/* H3: Mobilde 20px -> Masaüstünde 30px */
 .type-h3 {
   font-size: clamp(1.25rem, 2.5vw, 1.875rem);
   line-height: 1.3;
 }
 
-/* H4: Mobilde 18px -> Masaüstünde 24px */
 .type-h4 {
   font-size: clamp(1.125rem, 2vw, 1.5rem);
   line-height: 1.4;
 }
 
-/* Subhead: Mobilde 16px -> Masaüstünde 20px */
 .type-subhead {
   font-size: clamp(1rem, 1.5vw, 1.25rem);
   line-height: 1.5;
 }
 
-/* Large Body: Mobilde 16px -> Masaüstünde 18px */
 .type-large-body {
   font-size: clamp(1rem, 1.2vw, 1.125rem);
   line-height: 1.5;
 }
 
-/* Body: Standart 16px */
 .type-body {
   font-size: 1rem;
   line-height: 1.6;
 }
 
-/* Caption: Standart 12px */
 .type-caption {
   font-size: 0.75rem;
   line-height: 1.5;
@@ -108,31 +114,26 @@ body {
 .main-grid {
   display: grid;
   width: 100%;
-  /* Mobil: 4 Sütun */
   grid-template-columns: repeat(4, 1fr);
   column-gap: var(--gutter);
-  /* Kenar boşlukları değişkenden gelir */
   padding-left: var(--margin);
   padding-right: var(--margin);
 }
 
 @media (min-width: 768px) {
   .main-grid {
-    /* Tablet: 8 Sütun */
     grid-template-columns: repeat(8, 1fr);
   }
 }
 
 @media (min-width: 1024px) {
   .main-grid {
-    /* Desktop: 12 Sütun */
     grid-template-columns: repeat(12, 1fr);
   }
 }
 
 /* --- ANİMASYON VE PERFORMANS YARDIMCILARI --- */
 
-/* Scroll Kilidi & Transition Yardımcıları */
 html.is-transitioning,
 body.is-transitioning {
   pointer-events: none !important;
@@ -140,7 +141,6 @@ body.is-transitioning {
   user-select: none !important;
 }
 
-/* GPU Hızlandırma */
 .gpu-accelerated {
   will-change: transform, opacity;
   transform: translate3d(0, 0, 0);
@@ -148,7 +148,6 @@ body.is-transitioning {
   perspective: 1000px;
 }
 
-/* Text Reveal için Satır Maskeleme */
 .line-wrapper {
   overflow: hidden;
   display: block;
@@ -161,13 +160,21 @@ body.is-transitioning {
   display: block;
 }
 
-/* Scrollbar Gizleme */
+/* EKLEME: Medya elemanlarının blend modunu bozmasını engelle */
+video,
+img {
+  display: block;
+  max-width: 100%;
+  /* z-index sorunu yaratmamaları için */
+  isolation: isolate;
+}
+
 ::-webkit-scrollbar {
   width: 0px;
   background: transparent;
 }
 
-/* Metin Seçim Rengi (Selection Color) */
+/* Selection Color: Blend modunda ters renklerin okunabilirliği için */
 ::selection {
   background-color: #ffffff;
   color: #000000;

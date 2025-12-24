@@ -91,33 +91,34 @@ export default function Preloader({ onComplete }: { onComplete: () => void }) {
   return (
     <div
       ref={containerRef}
-      // DÜZELTME 1: Global padding değişkeni kullanıldı (px-[var(--spacing-margin)])
       className="fixed inset-0 z-[9999] bg-black text-white w-full h-screen flex flex-col justify-center px-[var(--spacing-margin)]"
     >
       <div
         ref={wrapperRef}
-        // DÜZELTME 2: Flex yerine 'main-grid' kullanıldı ve iç padding sıfırlandı (!px-0)
-        // items-end: Yazı tabanı ile barın hizalanması için
-        className="w-full main-grid !px-0 items-end"
+        // GÜNCELLEME: gap-y-8 ekledik. Mobilde alt alta gelince araları açık olsun.
+        className="w-full main-grid !px-0 items-end gap-y-8 md:gap-y-0"
       >
         {/* SOL TARAF (Logo) */}
-        {/* Mobilde 2, Tablette 4, Masaüstünde 6 sütun */}
-        <div className="col-span-2 md:col-span-4 lg:col-span-6 overflow-hidden">
+        {/* Mobil: col-span-4 (Tam satır, rahat sığsın) */}
+        {/* Tablet: col-span-4 (Yarım) */}
+        {/* Desktop: col-span-6 (Yarım) */}
+        <div className="col-span-4 md:col-span-4 lg:col-span-6 overflow-hidden">
           <h1
             ref={titleRef}
-            // Başlık font boyutu global type sınıfları ile uyumlu hale getirilebilir ama
-            // senin tasarımını bozmamak için text-3xl vs. korundu.
-            className="preloader-title text-3xl md:text-5xl lg:text-7xl font-normal uppercase tracking-[-0.02em] leading-none"
+            // Font boyutları: Mobilde 3xl, Tablette 5xl, Masaüstünde 7xl
+            className="preloader-title text-3xl md:text-5xl lg:text-7xl font-normal uppercase tracking-[-0.02em] leading-none whitespace-nowrap"
           >
             XVI INTERACTIVE
           </h1>
         </div>
 
         {/* SAĞ TARAF (Sayaç ve Bar) */}
-        {/* Mobilde 2, Tablette 4, Masaüstünde 6 sütun (Sağa yaslı) */}
+        {/* Mobil: col-span-4 (Logonun altına iner, tam satır kaplar) */}
+        {/* Tablet: col-span-4 (Logonun yanına çıkar) */}
+        {/* Desktop: col-span-6 (Logonun yanına çıkar) */}
         <div
           ref={rightSectionRef}
-          className="col-span-2 md:col-span-4 lg:col-span-6 flex flex-col items-end justify-end gap-2 w-full"
+          className="col-span-4 md:col-span-4 lg:col-span-6 flex flex-col items-end justify-end gap-2 w-full"
         >
           <span
             ref={percentRef}
@@ -125,7 +126,7 @@ export default function Preloader({ onComplete }: { onComplete: () => void }) {
           >
             0%
           </span>
-          {/* Bar Genişliği: Kendi grid alanının tamamını kaplasın diye w-full */}
+          {/* Bar genişliği: Kendi grid hücresinin %100'ü */}
           <div className="w-full h-[1px] md:h-[2px] overflow-hidden bg-white/20">
             <div
               ref={barRef}
