@@ -11,6 +11,7 @@ export default function Navbar() {
 
   useEffect(() => {
     const handleScroll = () => {
+      // 80vh tetikleme noktası
       const triggerHeight = window.innerHeight * 0.8;
       setIsScrolled(window.scrollY >= triggerHeight);
     };
@@ -28,17 +29,21 @@ export default function Navbar() {
 
   return (
     <>
-      {/* NAVBAR WRAPPER
-        - z-[9999]: Kesinlikle en üstte.
-        - mix-blend-difference: Tüm içeriği arkadakine göre ters çevirir.
-        - text-white: Difference için baz renk.
-        - pointer-events-none: Navbar boşlukları sayfayı bloklamasın.
+      {/* --- NAVBAR ANA KAPSAYICI --- */}
+      {/*
+          1. style={{ mixBlendMode: 'difference', color: '#ffffff' }}:
+             Tailwind yerine Inline Style ile zorluyoruz. Bu, tarayıcıyı hesaplama yapmaya mecbur bırakır.
+             Opacity efektleri alt katmanda çalışır, parent blend modunu bozmaz.
+          2. pointer-events-none: Tıklamaları engelleme (içeride açacağız).
       */}
-      <nav className="fixed top-0 left-0 w-full z-[9999] px-[var(--spacing-margin)] py-6 font-normal transition-all duration-300 pointer-events-none mix-blend-difference text-white">
+      <nav
+        className="fixed top-0 left-0 w-full z-[9999] px-[var(--spacing-margin)] py-6 font-normal transition-all duration-300 pointer-events-none"
+        style={{ mixBlendMode: "difference", color: "#ffffff" }}
+      >
         {/* DESKTOP GRID */}
         <div className="hidden md:grid grid-cols-12 gap-5 items-start w-full">
           {/* SOL BLOK: LOGO */}
-          {/* pointer-events-auto: Tıklamayı burada açıyoruz */}
+          {/* pointer-events-auto: Tıklama açık */}
           <div className="col-span-3 pointer-events-auto overflow-hidden h-[1.5em]">
             <TransitionLink
               href="/"
@@ -51,8 +56,9 @@ export default function Navbar() {
                   isScrolled ? "-translate-y-1/2" : "translate-y-0"
                 )}
               >
-                {/* Üst Kat */}
-                <div className="h-[1.5em] flex items-center">
+                {/* 1. Kat: World-Class... */}
+                {/* leading-none: Satır yüksekliğini sıkıştırır, taşmayı önler */}
+                <div className="h-[1.5em] flex items-center leading-none">
                   <ScrambleText
                     shuffleDuration={0.6}
                     className="whitespace-nowrap"
@@ -60,8 +66,11 @@ export default function Navbar() {
                     World-Class Innovation Hub
                   </ScrambleText>
                 </div>
-                {/* Alt Kat (Logo) */}
-                <div className="h-[1.5em] flex items-center pt-1">
+
+                {/* 2. Kat: XVI Logo */}
+                {/* leading-none + pt-1: Sıkı satır aralığı + 4px üst boşluk.
+                    Bu kombinasyon, yazının yukarıdayken ortalanmasını, aşağıdayken gizlenmesini garanti eder. */}
+                <div className="h-[1.5em] flex items-center pt-1 leading-none">
                   <ScrambleText
                     shuffleDuration={0.6}
                     className="whitespace-nowrap font-bold"
@@ -73,15 +82,16 @@ export default function Navbar() {
             </TransitionLink>
           </div>
 
-          {/* ORTA BLOK: MENÜ */}
-          {/* pointer-events-auto: Linklerin çalışması için şart */}
+          {/* ORTA BLOK: MENÜ LİNKLERİ */}
           <div className="col-span-4 col-start-7 flex items-center gap-[10px] pointer-events-auto">
             {navLinks.map((link) => (
               <TransitionLink
                 key={link.href}
                 href={link.href}
-                className="type-caption font-normal group block" // block eklendi
+                className="type-caption font-normal group block"
               >
+                {/* Hover Opacity Efekti Buradadır.
+                    Parent'ta blend mode olduğu için bu opacity değişimi de blend olur. */}
                 <ScrambleText
                   shuffleDuration={0.4}
                   className="hover:opacity-50 transition-opacity"
@@ -104,8 +114,8 @@ export default function Navbar() {
         </div>
 
         {/* MOBILE HEADER */}
-        <div className="flex md:hidden justify-between items-center w-full">
-          <div className="overflow-hidden h-[1.5em] w-3/4 pointer-events-auto">
+        <div className="flex md:hidden justify-between items-center w-full pointer-events-auto">
+          <div className="overflow-hidden h-[1.5em] w-3/4">
             <TransitionLink
               href="/"
               className="type-caption uppercase tracking-widest font-normal block"
@@ -117,12 +127,13 @@ export default function Navbar() {
                   isScrolled ? "-translate-y-1/2" : "translate-y-0"
                 )}
               >
-                <div className="h-[1.5em] flex items-center">
+                <div className="h-[1.5em] flex items-center leading-none">
                   <span className="whitespace-nowrap">
                     World-Class Innovation Hub
                   </span>
                 </div>
-                <div className="h-[1.5em] flex items-center pt-1">
+                {/* Mobilde de aynı leading-none ve pt-1 tekniği */}
+                <div className="h-[1.5em] flex items-center pt-1 leading-none">
                   <span className="whitespace-nowrap font-bold">
                     XVI® INTERACTIVE
                   </span>
@@ -133,15 +144,14 @@ export default function Navbar() {
 
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="uppercase tracking-widest type-caption font-normal z-50 relative pointer-events-auto"
+            className="uppercase tracking-widest type-caption font-normal z-50 relative"
           >
             <ScrambleText>{isOpen ? "Close" : "Menu"}</ScrambleText>
           </button>
         </div>
       </nav>
 
-      {/* MOBILE MENU OVERLAY */}
-      {/* Burası blend moduna dahil DEĞİL. Siyah zemin üzerine beyaz yazı. */}
+      {/* MOBILE MENU OVERLAY (Blend Yok - Düz Siyah) */}
       <div
         className={clsx(
           "fixed inset-0 bg-black text-white z-[990] flex flex-col justify-center items-center gap-8 transition-transform duration-500 ease-in-out md:hidden",
