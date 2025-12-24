@@ -1,65 +1,128 @@
-import Image from "next/image";
+import TransitionLink from "@/components/ui/TransitionLink";
+import TextReveal from "@/components/ui/TextReveal";
+import ScrambleButton from "@/components/ui/ScrambleButton";
+import ParallaxImage from "@/components/ui/ParallaxImage";
+import { projects } from "@/data/projects";
 
 export default function Home() {
+  const selectedProjects = projects.slice(0, 2);
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <div className="w-full">
+      {/* HERO */}
+      <section className="min-h-[90vh] flex flex-col justify-center px-[var(--spacing-margin)] pt-32 pb-20">
+        <div className="mb-10 lg:mb-16">
+          <TextReveal
+            tagName="h1"
+            className="type-hero font-light uppercase leading-[0.95]"
+            animateOnScroll={false}
+            delay={0.3}
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+            Digital Experiences <br /> For The Bold.
+          </TextReveal>
         </div>
-      </main>
+
+        <div className="main-grid !px-0">
+          <div className="col-span-4 md:col-span-4 md:col-start-5 lg:col-span-6 lg:col-start-7 flex flex-col gap-8">
+            <TextReveal
+              tagName="p"
+              className="type-subhead text-gray-400 font-light"
+              animateOnScroll={false}
+              delay={0.5}
+            >
+              We craft immersive web interactions and strategic branding for
+              visionary companies.
+            </TextReveal>
+
+            <div className="flex items-center gap-4">
+              <TransitionLink href="/works">
+                <ScrambleButton className="type-caption px-8 py-3">
+                  Our Works
+                </ScrambleButton>
+              </TransitionLink>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* SELECTED WORKS */}
+      <section className="px-[var(--spacing-margin)] pb-32">
+        <div className="flex items-end justify-between mb-20 border-b border-white/20 pb-4">
+          <TextReveal tagName="h2" className="type-h2 font-normal uppercase">
+            Selected Works
+          </TextReveal>
+          <div className="hidden md:block">
+            <TransitionLink href="/works">
+              <ScrambleButton className="type-caption px-6 py-3">
+                View All
+              </ScrambleButton>
+            </TransitionLink>
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-32">
+          {selectedProjects.map((project, index) => (
+            <TransitionLink
+              key={project.id}
+              href={`/works/${project.slug}`}
+              className="group block"
+            >
+              <div className="main-grid !px-0 items-center gap-y-8">
+                {/* GÖRSEL */}
+                <div
+                  className={`col-span-4 md:col-span-8 lg:col-span-7 w-full ${
+                    index % 2 === 1 ? "lg:order-2" : "lg:order-1"
+                  }`}
+                >
+                  <ParallaxImage
+                    src={project.src}
+                    alt={project.title}
+                    aspectRatio="aspect-[16/10]"
+                  />
+                </div>
+
+                {/* METİN */}
+                <div
+                  className={`col-span-4 md:col-span-8 lg:col-span-4 flex flex-col gap-6 ${
+                    index % 2 === 1 ? "lg:order-1" : "lg:order-2 lg:col-start-9"
+                  }`}
+                >
+                  <div className="border-b border-white/20 pb-4">
+                    <div className="flex justify-between items-baseline mb-2">
+                      {/* Text Reveal Eklendi */}
+                      <TextReveal
+                        tagName="span"
+                        className="type-caption text-gray-500"
+                        delay={0.1}
+                      >
+                        0{index + 1}
+                      </TextReveal>
+                      {/* Text Reveal Eklendi */}
+                      <TextReveal
+                        tagName="div"
+                        className="type-caption text-gray-400"
+                        delay={0.1}
+                      >
+                        {project.year}
+                      </TextReveal>
+                    </div>
+                    <TextReveal
+                      tagName="h3"
+                      className="type-h2 font-light uppercase leading-none group-hover:italic transition-all duration-500"
+                    >
+                      {project.title}
+                    </TextReveal>
+                  </div>
+                  {/* Text Reveal Eklendi */}
+                  <TextReveal tagName="div" className="type-body text-gray-500">
+                    {project.description}
+                  </TextReveal>
+                </div>
+              </div>
+            </TransitionLink>
+          ))}
+        </div>
+      </section>
     </div>
   );
 }
