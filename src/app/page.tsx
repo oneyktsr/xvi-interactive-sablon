@@ -14,19 +14,127 @@ if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
+// --- LOGO HARF VERİLERİ (Orijinal Boyutlar) ---
+const logoLetters = [
+  // --- XVI ---
+  {
+    char: "X",
+    w: 29.4,
+    d: "M5.18 12.07L14.56 27.20L14.84 27.20L24.22 12.07L29.40 12.07L17.97 30.26L29.40 48.44L24.22 48.44L14.84 33.59L14.56 33.59L5.18 48.44L0 48.44L11.72 30.26L0 12.07L5.18 12.07Z",
+  },
+  {
+    char: "V",
+    w: 31.25,
+    d: "M4.62 12.07L15.41 42.68L15.84 42.68L26.63 12.07L31.25 12.07L17.90 48.44L13.35 48.44L0 12.07L4.62 12.07Z",
+  },
+  {
+    char: "I",
+    w: 4.4,
+    d: "M4.40 12.07L4.40 48.44L0 48.44L0 12.07L4.40 12.07Z",
+  },
+  {
+    char: "R_SYM",
+    w: 29.4,
+    d: "M9.23 32.17L9.23 19.07L15.87 19.07Q16.67 19.07 17.61 19.52Q18.55 19.98 19.22 20.91Q19.89 21.84 19.89 23.26Q19.89 24.70 19.19 25.70Q18.50 26.70 17.52 27.22Q16.53 27.73 15.66 27.73L10.87 27.73L10.87 25.60L14.77 25.60Q15.36 25.60 16.04 25.02Q16.73 24.43 16.73 23.26Q16.73 22.05 16.04 21.63Q15.36 21.20 14.84 21.20L12.11 21.20L12.11 32.17L9.23 32.17M17.15 25.99L20.42 32.17L17.26 32.17L14.06 25.99L17.15 25.99M14.20 39.99Q11.26 39.99 8.68 38.88Q6.11 37.78 4.15 35.83Q2.20 33.88 1.10 31.30Q0 28.73 0 25.78Q0 22.83 1.10 20.26Q2.20 17.68 4.15 15.73Q6.11 13.78 8.68 12.68Q11.26 11.58 14.20 11.58Q17.15 11.58 19.73 12.68Q22.30 13.78 24.25 15.73Q26.21 17.68 27.31 20.26Q28.41 22.83 28.41 25.78Q28.41 28.73 27.31 31.30Q26.21 33.88 24.25 35.83Q22.30 37.78 19.73 38.88Q17.15 39.99 14.20 39.99M14.20 36.58Q17.19 36.58 19.64 35.12Q22.09 33.66 23.54 31.21Q25 28.76 25 25.78Q25 22.80 23.54 20.35Q22.09 17.90 19.64 16.44Q17.19 14.99 14.20 14.99Q11.22 14.99 8.77 16.44Q6.32 17.90 4.87 20.35Q3.41 22.80 3.41 25.78Q3.41 28.76 4.87 31.21Q6.32 33.66 8.77 35.12Q11.22 36.58 14.20 36.58Z",
+  },
+
+  // --- INTERACTIVE (Boşluksuz devam ediyor) ---
+  {
+    char: "I",
+    w: 4.4,
+    d: "M4.40 12.07L4.40 48.44L0 48.44L0 12.07L4.40 12.07Z",
+  },
+  {
+    char: "N",
+    w: 28.84,
+    d: "M28.84 12.07L28.84 48.44L24.57 48.44L4.76 19.89L4.40 19.89L4.40 48.44L0 48.44L0 12.07L4.26 12.07L24.15 40.70L24.50 40.70L24.50 12.07L28.84 12.07Z",
+  },
+  {
+    char: "T",
+    w: 27.27,
+    d: "M0 15.98L0 12.07L27.27 12.07L27.27 15.98L15.84 15.98L15.84 48.44L11.43 48.44L11.43 15.98L0 15.98Z",
+  },
+  {
+    char: "E",
+    w: 22.23,
+    d: "M0 48.44L0 12.07L21.95 12.07L21.95 15.98L4.40 15.98L4.40 28.27L20.81 28.27L20.81 32.17L4.40 32.17L4.40 44.53L22.23 44.53L22.23 48.44L0 48.44Z",
+  },
+  {
+    char: "R",
+    w: 26.07,
+    d: "M0 48.44L0 12.07L12.29 12.07Q16.55 12.07 19.28 13.52Q22.02 14.97 23.33 17.49Q24.64 20.01 24.64 23.22Q24.64 26.44 23.33 28.92Q22.02 31.41 19.30 32.82Q16.58 34.23 12.36 34.23L2.41 34.23L2.41 30.26L12.22 30.26Q15.13 30.26 16.91 29.40Q18.70 28.55 19.50 26.98Q20.31 25.41 20.31 23.22Q20.31 21.04 19.50 19.41Q18.68 17.77 16.89 16.88Q15.09 15.98 12.14 15.98L4.40 15.98L4.40 48.44L0 48.44M17.12 32.10L26.07 48.44L20.95 48.44L12.14 32.10L17.12 32.10Z",
+  },
+  {
+    char: "A",
+    w: 31.25,
+    d: "M4.62 48.44L0 48.44L13.35 12.07L17.90 12.07L31.25 48.44L26.63 48.44L15.77 17.83L15.48 17.83L4.62 48.44M6.32 34.23L24.93 34.23L24.93 38.14L6.32 38.14L6.32 34.23Z",
+  },
+  {
+    char: "C",
+    w: 30.68,
+    d: "M30.68 23.44L26.28 23.44Q25.89 21.54 24.92 20.10Q23.95 18.66 22.58 17.68Q21.20 16.69 19.53 16.19Q17.86 15.70 16.05 15.70Q12.75 15.70 10.08 17.37Q7.40 19.03 5.83 22.28Q4.26 25.53 4.26 30.26Q4.26 34.98 5.83 38.23Q7.40 41.48 10.08 43.15Q12.75 44.82 16.05 44.82Q17.86 44.82 19.53 44.32Q21.20 43.82 22.58 42.84Q23.95 41.85 24.92 40.40Q25.89 38.96 26.28 37.07L30.68 37.07Q30.18 39.86 28.87 42.06Q27.56 44.26 25.60 45.80Q23.65 47.34 21.23 48.14Q18.80 48.93 16.05 48.93Q11.40 48.93 7.78 46.66Q4.15 44.39 2.08 40.20Q0 36.01 0 30.26Q0 24.50 2.08 20.31Q4.15 16.12 7.78 13.85Q11.40 11.58 16.05 11.58Q18.80 11.58 21.23 12.38Q23.65 13.17 25.60 14.71Q27.56 16.25 28.87 18.44Q30.18 20.63 30.68 23.44Z",
+  },
+  {
+    char: "T",
+    w: 27.27,
+    d: "M0 15.98L0 12.07L27.27 12.07L27.27 15.98L15.84 15.98L15.84 48.44L11.43 48.44L11.43 15.98L0 15.98Z",
+  },
+  {
+    char: "I",
+    w: 4.4,
+    d: "M4.40 12.07L4.40 48.44L0 48.44L0 12.07L4.40 12.07Z",
+  },
+  {
+    char: "V",
+    w: 31.25,
+    d: "M4.62 12.07L15.41 42.68L15.84 42.68L26.63 12.07L31.25 12.07L17.90 48.44L13.35 48.44L0 12.07L4.62 12.07Z",
+  },
+  {
+    char: "E",
+    w: 22.23,
+    d: "M0 48.44L0 12.07L21.95 12.07L21.95 15.98L4.40 15.98L4.40 28.27L20.81 28.27L20.81 32.17L4.40 32.17L4.40 44.53L22.23 44.53L22.23 48.44L0 48.44Z",
+  },
+];
+
 export default function Home() {
   const selectedProjects = projects.slice(0, 2);
   const heroRef = useRef<HTMLDivElement>(null);
   const heroTitleWrapperRef = useRef<HTMLDivElement>(null);
+  const logoWrapperRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const videoWrapperRef = useRef<HTMLDivElement>(null);
 
-  // --- PARALLAX ANIMATIONS ---
+  // --- HERO ANIMATIONS ---
   useGSAP(
     () => {
+      // 1. LOGO SİNEMATİK GİRİŞ (SOFT + BLUR)
+      if (logoWrapperRef.current) {
+        const chars = logoWrapperRef.current.querySelectorAll(".logo-char");
+
+        gsap.fromTo(
+          chars,
+          {
+            opacity: 0,
+            filter: "blur(10px)", // Sinematik Blur Başlangıcı
+          },
+          {
+            opacity: 1,
+            filter: "blur(0px)", // Netleşme
+            duration: 2.5, // Yavaş ve asil
+            ease: "power2.out",
+            stagger: {
+              amount: 1, // Tüm harfler 1 saniye içinde sırayla gelir
+              from: "random",
+            },
+            delay: 0.2,
+          }
+        );
+      }
+
+      // 2. Parallax Scroll
       if (!heroTitleWrapperRef.current || !heroRef.current) return;
       gsap.to(heroTitleWrapperRef.current, {
-        yPercent: 60, // Ağır baskı
+        yPercent: 60,
         ease: "none",
         scrollTrigger: {
           trigger: heroRef.current,
@@ -39,6 +147,7 @@ export default function Home() {
     { scope: heroRef }
   );
 
+  // --- VIDEO PARALLAX ---
   useGSAP(
     () => {
       if (!containerRef.current || !videoWrapperRef.current) return;
@@ -64,58 +173,72 @@ export default function Home() {
       {/* --- HERO SECTION --- */}
       <section
         ref={heroRef}
-        // Alt boşluk 20px
         className="h-[80vh] w-full flex flex-col justify-end px-[var(--spacing-margin)] pb-[20px] relative z-0"
       >
-        {/* SVG LOGO */}
-        {/* Mobilde pt-[200px] */}
+        {/* SVG LOGO WRAPPER */}
+        {/* BOŞLUK REVİZESİ:
+            pt-[65px]: Navbar'ın hemen altına, yaklaşık 10px boşluk bırakacak şekilde yukarı çekildi.
+            Bu değer hem mobilde hem masaüstünde sabit tutuldu (Navbar yüksekliği sabit olduğu için).
+        */}
         <div
           ref={heroTitleWrapperRef}
-          className="absolute inset-0 flex items-start pt-[200px] md:pt-[96px] w-full px-[var(--spacing-margin)] pointer-events-none"
+          className="absolute inset-0 flex items-start pt-[65px] md:pt-[65px] w-full px-[var(--spacing-margin)] pointer-events-none"
         >
           <div className="main-grid w-full !px-0">
             <div className="col-span-4 md:col-span-8 lg:col-span-12 w-full">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 11.579999923706055 432.0299987792969 37.349998474121094"
-                className="w-full h-auto fill-white"
+              {/* H1 LOGO:
+                        - gap-[0.2%]: Harflerin birbirine yapışmasını önleyen "azıcık" boşluk.
+                     */}
+              <h1
+                ref={logoWrapperRef}
+                className="w-full flex items-end gap-[0.2%]"
+                aria-label="XVI INTERACTIVE"
               >
-                <path d="M5.18 12.07L14.56 27.20L14.84 27.20L24.22 12.07L29.40 12.07L17.97 30.26L29.40 48.44L24.22 48.44L14.84 33.59L14.56 33.59L5.18 48.44L0 48.44L11.72 30.26L0 12.07L5.18 12.07ZM36.65 12.07L47.44 42.68L47.87 42.68L58.66 12.07L63.28 12.07L49.93 48.44L45.38 48.44L32.03 12.07L36.65 12.07ZM73.37 12.07L73.37 48.44L68.96 48.44L68.96 12.07L73.37 12.07ZM89.56 32.17L89.56 19.07L96.20 19.07Q97.00 19.07 97.94 19.52Q98.88 19.98 99.55 20.91Q100.21 21.84 100.21 23.26Q100.21 24.70 99.52 25.70Q98.83 26.70 97.84 27.22Q96.86 27.73 95.99 27.73L91.19 27.73L91.19 25.60L95.10 25.60Q95.69 25.60 96.37 25.02Q97.05 24.43 97.05 23.26Q97.05 22.05 96.37 21.63Q95.69 21.20 95.17 21.20L92.44 21.20L92.44 32.17L89.56 32.17M97.48 25.99L100.75 32.17L97.59 32.17L94.39 25.99L97.48 25.99M94.53 39.99Q91.58 39.99 89.01 38.88Q86.43 37.78 84.48 35.83Q82.53 33.88 81.43 31.30Q80.33 28.73 80.33 25.78Q80.33 22.83 81.43 20.26Q82.53 17.68 84.48 15.73Q86.43 13.78 89.01 12.68Q91.58 11.58 94.53 11.58Q97.48 11.58 100.05 12.68Q102.63 13.78 104.58 15.73Q106.53 17.68 107.63 20.26Q108.74 22.83 108.74 25.78Q108.74 28.73 107.63 31.30Q106.53 33.88 104.58 35.83Q102.63 37.78 100.05 38.88Q97.48 39.99 94.53 39.99M94.53 36.58Q97.51 36.58 99.96 35.12Q102.41 33.66 103.87 31.21Q105.33 28.76 105.33 25.78Q105.33 22.80 103.87 20.35Q102.41 17.90 99.96 16.44Q97.51 14.99 94.53 14.99Q91.55 14.99 89.10 16.44Q86.65 17.90 85.19 20.35Q83.74 22.80 83.74 25.78Q83.74 28.76 85.19 31.21Q86.65 33.66 89.10 35.12Q91.55 36.58 94.53 36.58ZM120.10 12.07L120.10 48.44L115.70 48.44L115.70 12.07L120.10 12.07ZM157.74 12.07L157.74 48.44L153.48 48.44L133.66 19.89L133.31 19.89L133.31 48.44L128.91 48.44L128.91 12.07L133.17 12.07L153.05 40.70L153.41 40.70L153.41 12.07L157.74 12.07ZM164.56 15.98L164.56 12.07L191.83 12.07L191.83 15.98L180.40 15.98L180.40 48.44L175.99 48.44L175.99 15.98L164.56 15.98ZM198.65 48.44L198.65 12.07L220.60 12.07L220.60 15.98L203.05 15.98L203.05 28.27L219.46 28.27L219.46 32.17L203.05 32.17L203.05 44.53L220.88 44.53L220.88 48.44L198.65 48.44ZM228.55 48.44L228.55 12.07L240.84 12.07Q245.10 12.07 247.83 13.52Q250.57 14.97 251.88 17.49Q253.20 20.01 253.20 23.22Q253.20 26.44 251.88 28.92Q250.57 31.41 247.85 32.82Q245.13 34.23 240.91 34.23L230.97 34.23L230.97 30.26L240.77 30.26Q243.68 30.26 245.46 29.40Q247.25 28.55 248.06 26.98Q248.86 25.41 248.86 23.22Q248.86 21.04 248.05 19.41Q247.23 17.77 245.44 16.88Q243.64 15.98 240.70 15.98L232.95 15.98L232.95 48.44L228.55 48.44M245.67 32.10L254.62 48.44L249.50 48.44L240.70 32.10L245.67 32.10ZM262.00 48.44L257.39 48.44L270.74 12.07L275.28 12.07L288.64 48.44L284.02 48.44L273.15 17.83L272.87 17.83L262.00 48.44M263.71 34.23L282.32 34.23L282.32 38.14L263.71 38.14L263.71 34.23ZM323.58 23.44L319.18 23.44Q318.79 21.54 317.82 20.10Q316.85 18.66 315.47 17.68Q314.10 16.69 312.43 16.19Q310.76 15.70 308.95 15.70Q305.65 15.70 302.97 17.37Q300.30 19.03 298.73 22.28Q297.16 25.53 297.16 30.26Q297.16 34.98 298.73 38.23Q300.30 41.48 302.97 43.15Q305.65 44.82 308.95 44.82Q310.76 44.82 312.43 44.32Q314.10 43.82 315.47 42.84Q316.85 41.85 317.82 40.40Q318.79 38.96 319.18 37.07L323.58 37.07Q323.08 39.86 321.77 42.06Q320.45 44.26 318.50 45.80Q316.55 47.34 314.12 48.14Q311.70 48.93 308.95 48.93Q304.30 48.93 300.67 46.66Q297.05 44.39 294.98 40.20Q292.90 36.01 292.90 30.26Q292.90 24.50 294.98 20.31Q297.05 16.12 300.67 13.85Q304.30 11.58 308.95 11.58Q311.70 11.58 314.12 12.38Q316.55 13.17 318.50 14.71Q320.45 16.25 321.77 18.44Q323.08 20.63 323.58 23.44ZM328.69 15.98L328.69 12.07L355.97 12.07L355.97 15.98L344.53 15.98L344.53 48.44L340.13 48.44L340.13 15.98L328.69 15.98ZM367.19 12.07L367.19 48.44L362.78 48.44L362.78 12.07L367.19 12.07ZM377.49 12.07L388.28 42.68L388.71 42.68L399.50 12.07L404.12 12.07L390.77 48.44L386.22 48.44L372.87 12.07L377.49 12.07ZM409.80 48.44L409.80 12.07L431.75 12.07L431.75 15.98L414.20 15.98L414.20 28.27L430.61 28.27L430.61 32.17L414.20 32.17L414.20 44.53L432.03 44.53L432.03 48.44L409.80 48.44Z" />
-              </svg>
+                {logoLetters.map((letter, index) => (
+                  <div
+                    key={index}
+                    // flex: letter.w -> Harf genişliğine göre oransal dağılım
+                    style={{ flex: letter.w }}
+                    className="flex justify-center"
+                  >
+                    <svg
+                      viewBox={`0 12.07 ${letter.w} 36.37`}
+                      className="w-full h-auto fill-white logo-char"
+                    >
+                      <path d={letter.d} />
+                    </svg>
+                  </div>
+                ))}
+              </h1>
             </div>
           </div>
         </div>
 
-        {/* ALT METİNLER (DÜZENLENDİ) */}
+        {/* ALT METİNLER */}
         <div className="main-grid !px-0 items-end w-full relative z-10 pointer-events-none">
-          {/* SOL METİN */}
           <div className="col-span-2 md:col-span-2 hidden md:block">
-            {/* GÜNCELLEME: text-[16px] yapıldı */}
-            <div className="text-white text-[16px] leading-tight font-light">
-              Global Design <br />& Development Studio
+            <div className="text-white text-[16px] leading-tight font-light !normal-case flex flex-col gap-0.5">
+              <TextReveal delay={0.4}>Global Design</TextReveal>
+              <TextReveal delay={0.5}>& Development Studio</TextReveal>
             </div>
           </div>
 
-          {/* ORTA METİN */}
           <div className="col-span-2 md:col-span-2 hidden md:block">
-            {/* GÜNCELLEME: text-[16px] yapıldı */}
-            <div className="text-white text-[16px] leading-tight font-light">
-              Moving Ideas <br />
-              Elevating Performance
+            <div className="text-white text-[16px] leading-tight font-light !normal-case flex flex-col gap-0.5">
+              <TextReveal delay={0.6}>Moving Ideas</TextReveal>
+              <TextReveal delay={0.7}>Elevating Performance</TextReveal>
             </div>
           </div>
 
-          {/* MOBİL METİN */}
           <div className="col-span-4 md:hidden">
-            {/* GÜNCELLEME: text-[16px] yapıldı */}
-            <div className="text-white text-[16px] leading-tight font-light">
-              Global Design <br />& Development Studio
+            <div className="text-white text-[16px] leading-tight font-light !normal-case flex flex-col gap-0.5">
+              <TextReveal delay={0.4}>Global Design</TextReveal>
+              <TextReveal delay={0.5}>& Development Studio</TextReveal>
             </div>
           </div>
 
-          {/* SAĞ ALT OK */}
           <div className="col-span-2 col-start-11 text-right flex justify-end">
-            <div>
+            <div className="animate-bounce duration-[2000ms]">
               <svg
                 width="24"
                 height="24"
@@ -159,7 +282,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* --- WHITE SECTION (Selected Works) --- */}
+      {/* --- WHITE SECTION --- */}
       <div className="bg-white text-black relative z-10">
         <section className="px-[var(--spacing-margin)] pt-32 pb-32">
           <div className="flex items-end justify-between mb-20 border-b border-black/10 pb-4">
@@ -174,7 +297,6 @@ export default function Home() {
               </TransitionLink>
             </div>
           </div>
-
           <div className="flex flex-col gap-32">
             {selectedProjects.map((project, index) => (
               <TransitionLink
@@ -194,7 +316,6 @@ export default function Home() {
                       aspectRatio="aspect-[16/10]"
                     />
                   </div>
-
                   <div
                     className={`col-span-4 md:col-span-8 lg:col-span-4 flex flex-col gap-6 ${
                       index % 2 === 1
