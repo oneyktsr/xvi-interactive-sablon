@@ -14,9 +14,8 @@ if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
-// --- LOGO HARF VERİLERİ (Orijinal Boyutlar) ---
+// --- LOGO HARF VERİLERİ ---
 const logoLetters = [
-  // --- XVI ---
   {
     char: "X",
     w: 29.4,
@@ -37,8 +36,6 @@ const logoLetters = [
     w: 29.4,
     d: "M9.23 32.17L9.23 19.07L15.87 19.07Q16.67 19.07 17.61 19.52Q18.55 19.98 19.22 20.91Q19.89 21.84 19.89 23.26Q19.89 24.70 19.19 25.70Q18.50 26.70 17.52 27.22Q16.53 27.73 15.66 27.73L10.87 27.73L10.87 25.60L14.77 25.60Q15.36 25.60 16.04 25.02Q16.73 24.43 16.73 23.26Q16.73 22.05 16.04 21.63Q15.36 21.20 14.84 21.20L12.11 21.20L12.11 32.17L9.23 32.17M17.15 25.99L20.42 32.17L17.26 32.17L14.06 25.99L17.15 25.99M14.20 39.99Q11.26 39.99 8.68 38.88Q6.11 37.78 4.15 35.83Q2.20 33.88 1.10 31.30Q0 28.73 0 25.78Q0 22.83 1.10 20.26Q2.20 17.68 4.15 15.73Q6.11 13.78 8.68 12.68Q11.26 11.58 14.20 11.58Q17.15 11.58 19.73 12.68Q22.30 13.78 24.25 15.73Q26.21 17.68 27.31 20.26Q28.41 22.83 28.41 25.78Q28.41 28.73 27.31 31.30Q26.21 33.88 24.25 35.83Q22.30 37.78 19.73 38.88Q17.15 39.99 14.20 39.99M14.20 36.58Q17.19 36.58 19.64 35.12Q22.09 33.66 23.54 31.21Q25 28.76 25 25.78Q25 22.80 23.54 20.35Q22.09 17.90 19.64 16.44Q17.19 14.99 14.20 14.99Q11.22 14.99 8.77 16.44Q6.32 17.90 4.87 20.35Q3.41 22.80 3.41 25.78Q3.41 28.76 4.87 31.21Q6.32 33.66 8.77 35.12Q11.22 36.58 14.20 36.58Z",
   },
-
-  // --- INTERACTIVE (Boşluksuz devam ediyor) ---
   {
     char: "I",
     w: 4.4,
@@ -96,42 +93,70 @@ const logoLetters = [
   },
 ];
 
+// --- RANDOM KARAKTER EFEKTI (Ref Type Fix) ---
+const useScrambleText = (
+  targetRef: React.RefObject<HTMLElement | null>,
+  text: string
+) => {
+  useGSAP(
+    () => {
+      if (!targetRef.current) return;
+      const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()";
+      let iterations = 0;
+
+      ScrollTrigger.create({
+        trigger: targetRef.current,
+        start: "top 90%",
+        onEnter: () => {
+          const interval = setInterval(() => {
+            if (!targetRef.current) return;
+            targetRef.current.innerText = text
+              .split("")
+              .map((letter, index) => {
+                if (index < iterations) return text[index];
+                return chars[Math.floor(Math.random() * chars.length)];
+              })
+              .join("");
+
+            if (iterations >= text.length) clearInterval(interval);
+            iterations += 1 / 3;
+          }, 30);
+        },
+      });
+    },
+    { scope: targetRef }
+  );
+};
+
 export default function Home() {
-  const selectedProjects = projects.slice(0, 2);
   const heroRef = useRef<HTMLDivElement>(null);
   const heroTitleWrapperRef = useRef<HTMLDivElement>(null);
   const logoWrapperRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const videoWrapperRef = useRef<HTMLDivElement>(null);
+  const studioTextRef = useRef<HTMLDivElement>(null);
+
+  // --- "The Studio" (Siyah/Beyaz, Random Color Yok) ---
+  useScrambleText(studioTextRef, "The Studio");
 
   // --- HERO ANIMATIONS ---
   useGSAP(
     () => {
-      // 1. LOGO SİNEMATİK GİRİŞ (SOFT + BLUR)
       if (logoWrapperRef.current) {
         const chars = logoWrapperRef.current.querySelectorAll(".logo-char");
-
         gsap.fromTo(
           chars,
-          {
-            opacity: 0,
-            filter: "blur(10px)", // Sinematik Blur Başlangıcı
-          },
+          { opacity: 0, filter: "blur(10px)" },
           {
             opacity: 1,
-            filter: "blur(0px)", // Netleşme
-            duration: 2.5, // Yavaş ve asil
+            filter: "blur(0px)",
+            duration: 2.5,
             ease: "power2.out",
-            stagger: {
-              amount: 1, // Tüm harfler 1 saniye içinde sırayla gelir
-              from: "random",
-            },
+            stagger: { amount: 1, from: "random" },
             delay: 0.2,
           }
         );
       }
-
-      // 2. Parallax Scroll
       if (!heroTitleWrapperRef.current || !heroRef.current) return;
       gsap.to(heroTitleWrapperRef.current, {
         yPercent: 60,
@@ -175,20 +200,12 @@ export default function Home() {
         ref={heroRef}
         className="h-[80vh] w-full flex flex-col justify-end px-[var(--spacing-margin)] pb-[20px] relative z-0"
       >
-        {/* SVG LOGO WRAPPER */}
-        {/* BOŞLUK REVİZESİ:
-            pt-[65px]: Navbar'ın hemen altına, yaklaşık 10px boşluk bırakacak şekilde yukarı çekildi.
-            Bu değer hem mobilde hem masaüstünde sabit tutuldu (Navbar yüksekliği sabit olduğu için).
-        */}
         <div
           ref={heroTitleWrapperRef}
           className="absolute inset-0 flex items-start pt-[65px] md:pt-[65px] w-full px-[var(--spacing-margin)] pointer-events-none"
         >
           <div className="main-grid w-full !px-0">
             <div className="col-span-4 md:col-span-8 lg:col-span-12 w-full">
-              {/* H1 LOGO:
-                        - gap-[0.2%]: Harflerin birbirine yapışmasını önleyen "azıcık" boşluk.
-                     */}
               <h1
                 ref={logoWrapperRef}
                 className="w-full flex items-end gap-[0.2%]"
@@ -197,7 +214,6 @@ export default function Home() {
                 {logoLetters.map((letter, index) => (
                   <div
                     key={index}
-                    // flex: letter.w -> Harf genişliğine göre oransal dağılım
                     style={{ flex: letter.w }}
                     className="flex justify-center"
                   >
@@ -214,7 +230,6 @@ export default function Home() {
           </div>
         </div>
 
-        {/* ALT METİNLER */}
         <div className="main-grid !px-0 items-end w-full relative z-10 pointer-events-none">
           <div className="col-span-2 md:col-span-2 hidden md:block">
             <div className="text-white text-[16px] leading-tight font-light !normal-case flex flex-col gap-0.5">
@@ -222,21 +237,18 @@ export default function Home() {
               <TextReveal delay={0.5}>& Development Studio</TextReveal>
             </div>
           </div>
-
           <div className="col-span-2 md:col-span-2 hidden md:block">
             <div className="text-white text-[16px] leading-tight font-light !normal-case flex flex-col gap-0.5">
               <TextReveal delay={0.6}>Moving Ideas</TextReveal>
               <TextReveal delay={0.7}>Elevating Performance</TextReveal>
             </div>
           </div>
-
           <div className="col-span-4 md:hidden">
             <div className="text-white text-[16px] leading-tight font-light !normal-case flex flex-col gap-0.5">
               <TextReveal delay={0.4}>Global Design</TextReveal>
               <TextReveal delay={0.5}>& Development Studio</TextReveal>
             </div>
           </div>
-
           <div className="col-span-2 col-start-11 text-right flex justify-end">
             <div className="animate-bounce duration-[2000ms]">
               <svg
@@ -282,84 +294,73 @@ export default function Home() {
         </div>
       </section>
 
-      {/* --- WHITE SECTION --- */}
-      <div className="bg-white text-black relative z-10">
-        <section className="px-[var(--spacing-margin)] pt-32 pb-32">
-          <div className="flex items-end justify-between mb-20 border-b border-black/10 pb-4">
-            <TextReveal tagName="h2" className="type-h2 font-normal uppercase">
-              Selected Works
-            </TextReveal>
-            <div className="hidden md:block">
-              <TransitionLink href="/works">
-                <ScrambleButton className="type-caption px-6 py-3 border border-black/20 hover:bg-black hover:text-white transition-colors">
-                  View All
-                </ScrambleButton>
-              </TransitionLink>
+      {/* --- AGENCY DESCRIPTION SECTION --- */}
+      <section className="bg-black text-white px-[var(--spacing-margin)] pt-[60px] pb-32 relative z-10">
+        <div className="main-grid !px-0 gap-y-16">
+          {/* ÜST SATIR: THE STUDIO & ANA BAŞLIK */}
+          <div className="col-span-4 md:col-span-8 lg:col-span-12 relative">
+            {/* 1. KOLON: THE STUDIO (16px, Beyaz, Scramble) */}
+            {/* Absolute positioning: Grid akışını bozmadan 1. kolonda durur.
+                w-[calc(100%/12)] -> Tam olarak 1 grid kolonu genişliği */}
+            <div className="hidden lg:block absolute left-0 top-[0.5em] w-[calc(100%/12)]">
+              <div
+                ref={studioTextRef}
+                className="text-[16px] font-light text-white"
+              >
+                {/* JS ile dolacak */}
+              </div>
+            </div>
+
+            {/* ANA METİN (SEO: h2) */}
+            <h2 className="text-[32px] md:text-[40px] lg:text-[48px] leading-[1.1] font-light block">
+              {/* 1. Satır: 4. Kolondan Başlar (%25 içeriden) */}
+              <div className="lg:ml-[25.5%] ml-0">
+                <TextReveal>
+                  Transforming your ideas into impactful digital
+                </TextReveal>
+              </div>
+
+              {/* 2. Satır: Tam Genişlik */}
+              <div>
+                <TextReveal>
+                  experiences by delivering top-tier web development and
+                </TextReveal>
+              </div>
+
+              {/* 3. Satır: Tam Genişlik */}
+              <div>
+                <TextReveal>
+                  visual content, ensuring every project lives up to your brand
+                  with
+                </TextReveal>
+              </div>
+
+              {/* 4. Satır: Tam Genişlik */}
+              <div>
+                <TextReveal>creativity and precision.</TextReveal>
+              </div>
+            </h2>
+          </div>
+
+          {/* ALT SATIR: AÇIKLAMA PARAGRAFLARI (7-8-9. KOLONLAR) */}
+          <div className="col-span-4 md:col-span-8 lg:col-span-12 grid grid-cols-4 md:grid-cols-8 lg:grid-cols-12 gap-[var(--gutter)]">
+            {/* lg:col-start-7 -> 7. kolondan başla */}
+            {/* lg:col-span-3 -> 3 kolon (7, 8, 9) kapla */}
+            <div className="col-span-4 lg:col-start-7 lg:col-span-3 flex flex-col gap-8">
+              <TextReveal className="text-[16px] leading-relaxed text-white">
+                We are a specialized web and software development studio focused
+                on transforming digital identities and creating impactful online
+                experiences.
+              </TextReveal>
+              <TextReveal className="text-[16px] leading-relaxed text-white">
+                Serving clients across various industries, we leverage clean,
+                functional, and innovative design principles to empower forward
+                thinking companies.
+              </TextReveal>
             </div>
           </div>
-          <div className="flex flex-col gap-32">
-            {selectedProjects.map((project, index) => (
-              <TransitionLink
-                key={project.id}
-                href={`/works/${project.slug}`}
-                className="group block"
-              >
-                <div className="main-grid !px-0 items-center gap-y-8">
-                  <div
-                    className={`col-span-4 md:col-span-8 lg:col-span-7 w-full ${
-                      index % 2 === 1 ? "lg:order-2" : "lg:order-1"
-                    }`}
-                  >
-                    <ParallaxImage
-                      src={project.src}
-                      alt={project.title}
-                      aspectRatio="aspect-[16/10]"
-                    />
-                  </div>
-                  <div
-                    className={`col-span-4 md:col-span-8 lg:col-span-4 flex flex-col gap-6 ${
-                      index % 2 === 1
-                        ? "lg:order-1"
-                        : "lg:order-2 lg:col-start-9"
-                    }`}
-                  >
-                    <div className="border-b border-black/10 pb-4">
-                      <div className="flex justify-between items-baseline mb-2">
-                        <TextReveal
-                          tagName="span"
-                          className="type-caption text-gray-500"
-                          delay={0.1}
-                        >
-                          0{index + 1}
-                        </TextReveal>
-                        <TextReveal
-                          tagName="div"
-                          className="type-caption text-gray-500"
-                          delay={0.1}
-                        >
-                          {project.year}
-                        </TextReveal>
-                      </div>
-                      <TextReveal
-                        tagName="h3"
-                        className="type-h2 font-light uppercase leading-none group-hover:italic transition-all duration-500"
-                      >
-                        {project.title}
-                      </TextReveal>
-                    </div>
-                    <TextReveal
-                      tagName="div"
-                      className="type-body text-gray-600"
-                    >
-                      {project.description}
-                    </TextReveal>
-                  </div>
-                </div>
-              </TransitionLink>
-            ))}
-          </div>
-        </section>
-      </div>
+        </div>
+      </section>
     </div>
   );
 }
