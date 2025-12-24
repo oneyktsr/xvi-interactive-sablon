@@ -64,11 +64,11 @@ export default function Home() {
       {/* --- HERO SECTION --- */}
       <section
         ref={heroRef}
-        // Alt boşluk 20px olarak sabitlendi
+        // Alt boşluk 20px
         className="h-[80vh] w-full flex flex-col justify-end px-[var(--spacing-margin)] pb-[20px] relative z-0"
       >
         {/* SVG LOGO */}
-        {/* Mobilde pt-[200px] ile üstten çakışma önlendi */}
+        {/* Mobilde pt-[200px] */}
         <div
           ref={heroTitleWrapperRef}
           className="absolute inset-0 flex items-start pt-[200px] md:pt-[96px] w-full px-[var(--spacing-margin)] pointer-events-none"
@@ -86,21 +86,20 @@ export default function Home() {
           </div>
         </div>
 
-        {/* ALT BİLGİ SATIRI (GRID) */}
-        {/* pb-[var(--spacing-margin)] yerine yukarıda manuel 20px verdik */}
+        {/* ALT METİNLER (DÜZENLENDİ) */}
         <div className="main-grid !px-0 items-end w-full relative z-10 pointer-events-none">
           {/* SOL METİN */}
           <div className="col-span-2 md:col-span-2 hidden md:block">
-            {/* GÜNCELLEME: text-[24px] */}
-            <div className="type-caption text-white !normal-case text-[24px]">
+            {/* GÜNCELLEME: text-[16px] yapıldı */}
+            <div className="text-white text-[16px] leading-tight font-light">
               Global Design <br />& Development Studio
             </div>
           </div>
 
           {/* ORTA METİN */}
           <div className="col-span-2 md:col-span-2 hidden md:block">
-            {/* GÜNCELLEME: text-[24px] */}
-            <div className="type-caption text-white !normal-case text-[24px]">
+            {/* GÜNCELLEME: text-[16px] yapıldı */}
+            <div className="text-white text-[16px] leading-tight font-light">
               Moving Ideas <br />
               Elevating Performance
             </div>
@@ -108,8 +107,8 @@ export default function Home() {
 
           {/* MOBİL METİN */}
           <div className="col-span-4 md:hidden">
-            {/* GÜNCELLEME: text-[24px] */}
-            <div className="type-caption text-white !normal-case text-[24px]">
+            {/* GÜNCELLEME: text-[16px] yapıldı */}
+            <div className="text-white text-[16px] leading-tight font-light">
               Global Design <br />& Development Studio
             </div>
           </div>
