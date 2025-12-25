@@ -11,70 +11,118 @@ if (typeof window !== "undefined") {
   gsap.registerPlugin(SplitText, ScrollTrigger);
 }
 
+// Tip tanımları
+interface GSAPSplitText {
+  lines: HTMLElement[];
+  revert: () => void;
+}
+
+interface TextRevealProps {
+  children: React.ReactNode;
+  className?: string;
+  animateOnScroll?: boolean;
+  delay?: number;
+  tagName?: React.ElementType;
+  once?: boolean;
+}
+
 export default function TextReveal({
   children,
   className,
   animateOnScroll = true,
   delay = 0,
   tagName = "div",
-}: {
-  children: React.ReactNode;
-  className?: string;
-  animateOnScroll?: boolean;
-  delay?: number;
-  tagName?: React.ElementType;
-}) {
-  const containerRef = useRef<HTMLDivElement>(null);
+  once = false,
+}: TextRevealProps) {
+  const containerRef = useRef<HTMLElement>(null);
   const Tag = tagName;
 
   useGSAP(
     () => {
-      if (!containerRef.current) return;
+      const element = containerRef.current;
+      if (!element || !element.textContent || element.textContent.trim() === "")
+        return;
 
-      const split = new SplitText(containerRef.current, {
-        type: "lines",
-        linesClass: "line gpu-accelerated", // GPU sınıfını ekledik!
-      });
+      let split: GSAPSplitText | null = null;
 
-      // Satırları sarmalama işlemi
-      split.lines.forEach((line) => {
+      // 1. SplitText Başlat
+      try {
+        split = new SplitText(element, {
+          type: "lines",
+          linesClass: "line gpu-accelerated",
+        }) as unknown as GSAPSplitText;
+      } catch (err) {
+        return; // Hata varsa çık
+      }
+
+      // 2. Güvenlik
+      if (!split || !split.lines || split.lines.length === 0) return;
+
+      // 3. Wrapper Ekleme (Maskeleme efekti için şart)
+      split.lines.forEach((line: HTMLElement) => {
         const wrapper = document.createElement("div");
         wrapper.className = "line-wrapper";
-        wrapper.style.paddingBottom = "0.1em";
+        wrapper.style.paddingBottom = "0.1em"; // Harf kuyrukları kesilmesin diye
+        wrapper.style.overflow = "hidden"; // Maskeleme
         if (line.parentNode) {
           line.parentNode.insertBefore(wrapper, line);
           wrapper.appendChild(line);
         }
       });
 
-      // Başlangıç durumu
-      gsap.set(split.lines, { yPercent: 100, opacity: 0 });
+      // 4. Animasyon Hedeflerini Belirle
+      const linesToAnimate = split.lines;
 
-      const animationProps = {
-        yPercent: 0,
-        opacity: 1,
-        duration: 1.2,
-        stagger: 0.1,
-        ease: "power3.out", // Daha akışkan bir ease
-        delay: delay,
-        force3D: true, // GSAP'ı 3D kullanmaya zorla
-      };
-
+      // 5. ANİMASYON (fromTo kullanarak durumu garantiye alıyoruz)
       if (animateOnScroll) {
-        gsap.to(split.lines, {
-          ...animationProps,
-          scrollTrigger: {
-            trigger: containerRef.current,
-            start: "top 90%", // Biraz daha erken başlasın ki takılma hissi olmasın
-            toggleActions: "play none none reverse",
-            // markers: true, // Geliştirme aşamasında açılabilir
+        gsap.fromTo(
+          linesToAnimate,
+          {
+            yPercent: 100, // Başlangıç: Aşağıda
+            opacity: 0, // Başlangıç: Görünmez
           },
-        });
+          {
+            yPercent: 0, // Bitiş: Yerinde
+            opacity: 1, // Bitiş: Görünür
+            duration: 1.2,
+            stagger: 0.1,
+            ease: "power3.out",
+            delay: delay,
+            force3D: true,
+            scrollTrigger: {
+              trigger: element, // Tetikleyici container
+              start: "top 85%", // Ekranın %85'ine gelince başla (95 bazen geç kalıyor)
+              end: "bottom center",
+              once: once, // Tek seferlik mi?
+              toggleActions: once
+                ? "play none none none"
+                : "play none none reverse",
+            },
+          }
+        );
       } else {
-        gsap.to(split.lines, animationProps);
+        // Scroll yoksa direkt oynat
+        gsap.fromTo(
+          linesToAnimate,
+          { yPercent: 100, opacity: 0 },
+          {
+            yPercent: 0,
+            opacity: 1,
+            duration: 1.2,
+            stagger: 0.1,
+            ease: "power3.out",
+            delay: delay,
+          }
+        );
       }
+
+      // NOT: revert() işlemini kaldırdık.
+      // useGSAP otomatik temizliyor, manuel revert bazen animasyon bitmeden DOM'u bozuyor.
     },
-    { scope: containerRef, dependencies: [animateOnScroll, delay] }
+    {
+      scope: containerRef,
+      dependencies: [animateOnScroll, delay, once, children],
+    }
   );
 
   return (
