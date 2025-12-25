@@ -8,8 +8,7 @@ export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    // GÜNCELLEME: bg-white text-black
-    <footer className="w-full px-[var(--spacing-margin)] pt-20 pb-10 border-t border-black/10 bg-white text-black">
+    <footer className="w-full px-[var(--spacing-margin)] pt-20 pb-10 border-t border-black/10 bg-white text-black relative z-10">
       {/* 1. BIG CTA SECTION */}
       <div className="flex flex-col gap-8 mb-20 lg:mb-32">
         <TextReveal tagName="div" className="type-caption text-gray-500">
@@ -17,7 +16,6 @@ export default function Footer() {
         </TextReveal>
 
         <TransitionLink href="/contact" className="block w-fit group">
-          {/* Hover rengi koyulaştırıldı */}
           <TextReveal
             tagName="h2"
             className="type-hero font-light uppercase leading-[0.9] group-hover:text-gray-500 transition-colors"
@@ -28,7 +26,6 @@ export default function Footer() {
       </div>
 
       {/* 2. GRID LINKS */}
-      {/* Border rengi: border-black/10 */}
       <div className="main-grid !px-0 pb-20 border-b border-black/10 gap-y-12">
         {/* SITEMAP */}
         <div className="col-span-2 md:col-span-2 lg:col-span-3">
@@ -72,7 +69,6 @@ export default function Footer() {
         {/* OFFICE */}
         <div className="col-span-4 md:col-span-4 lg:col-span-4 lg:col-start-9">
           <div className="type-caption text-gray-500 mb-6">Office</div>
-          {/* Text rengi: text-gray-600 */}
           <address className="type-body not-italic text-gray-600">
             Levent 199, Büyükdere Cd. No:199 <br />
             34394 Şişli/İstanbul, Türkiye <br />

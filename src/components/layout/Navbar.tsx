@@ -4,22 +4,37 @@ import { useState, useEffect } from "react";
 import TransitionLink from "@/components/ui/TransitionLink";
 import ScrambleText from "@/components/ui/ScrambleText";
 import clsx from "clsx";
+import { useUI } from "@/context/UIContext";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const { isLoaded } = useUI(); // Global state'ten dinle
 
   useEffect(() => {
     const handleScroll = () => {
-      // 80vh tetikleme noktası
       const triggerHeight = window.innerHeight * 0.8;
       setIsScrolled(window.scrollY >= triggerHeight);
     };
-
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Preloader bitince Navbar görünür olsun (Fade In)
+  useGSAP(() => {
+    if (isLoaded) {
+      gsap.to("nav", {
+        autoAlpha: 1,
+        duration: 1,
+        ease: "power2.out",
+        delay: 0.5,
+      });
+    }
+  }, [isLoaded]);
+
+  // MOBİL VE MASAÜSTÜ LİNKLERİNİ EŞİTLEDİK
   const navLinks = [
     { href: "/works", label: "Works" },
     { href: "/studio", label: "Studio" },
@@ -29,52 +44,31 @@ export default function Navbar() {
 
   return (
     <>
-      {/* --- NAVBAR ANA KAPSAYICI --- */}
-      {/*
-          1. style={{ mixBlendMode: 'difference', color: '#ffffff' }}:
-             Tailwind yerine Inline Style ile zorluyoruz. Bu, tarayıcıyı hesaplama yapmaya mecbur bırakır.
-             Opacity efektleri alt katmanda çalışır, parent blend modunu bozmaz.
-          2. pointer-events-none: Tıklamaları engelleme (içeride açacağız).
-      */}
       <nav
-        className="fixed top-0 left-0 w-full z-[9999] px-[var(--spacing-margin)] py-6 font-normal transition-all duration-300 pointer-events-none"
-        style={{ mixBlendMode: "difference", color: "#ffffff" }}
+        className="fixed top-0 left-0 w-full px-[var(--spacing-margin)] py-6 font-normal transition-all duration-300 pointer-events-none opacity-0 invisible" // Başlangıçta gizli
+        style={{
+          mixBlendMode: "difference",
+          color: "#ffffff",
+          zIndex: 9999,
+          isolation: "isolate", // BLEND FIX
+          background: "transparent",
+        }}
       >
-        {/* DESKTOP GRID */}
         <div className="hidden md:grid grid-cols-12 gap-5 items-start w-full">
-          {/* SOL BLOK: LOGO */}
-          {/* pointer-events-auto: Tıklama açık */}
+          {/* LOGO */}
           <div className="col-span-3 pointer-events-auto overflow-hidden h-[1.5em]">
-            <TransitionLink
-              href="/"
-              className="type-caption uppercase tracking-widest font-normal block w-fit"
-              onClick={() => setIsOpen(false)}
-            >
+            <TransitionLink href="/" onClick={() => setIsOpen(false)}>
               <div
                 className={clsx(
-                  "flex flex-col transition-transform duration-700 ease-[cubic-bezier(0.76,0,0.24,1)]",
+                  "flex flex-col transition-transform duration-700",
                   isScrolled ? "-translate-y-1/2" : "translate-y-0"
                 )}
               >
-                {/* 1. Kat: World-Class... */}
-                {/* leading-none: Satır yüksekliğini sıkıştırır, taşmayı önler */}
                 <div className="h-[1.5em] flex items-center leading-none">
-                  <ScrambleText
-                    shuffleDuration={0.6}
-                    className="whitespace-nowrap"
-                  >
-                    World-Class Innovation Hub
-                  </ScrambleText>
+                  <ScrambleText>World-Class Innovation Hub</ScrambleText>
                 </div>
-
-                {/* 2. Kat: XVI Logo */}
-                {/* leading-none + pt-1: Sıkı satır aralığı + 4px üst boşluk.
-                    Bu kombinasyon, yazının yukarıdayken ortalanmasını, aşağıdayken gizlenmesini garanti eder. */}
                 <div className="h-[1.5em] flex items-center pt-1 leading-none">
-                  <ScrambleText
-                    shuffleDuration={0.6}
-                    className="whitespace-nowrap font-bold"
-                  >
+                  <ScrambleText className="font-bold">
                     XVI® INTERACTIVE
                   </ScrambleText>
                 </div>
@@ -82,7 +76,7 @@ export default function Navbar() {
             </TransitionLink>
           </div>
 
-          {/* ORTA BLOK: MENÜ LİNKLERİ */}
+          {/* MENÜ */}
           <div className="col-span-4 col-start-7 flex items-center gap-[10px] pointer-events-auto">
             {navLinks.map((link) => (
               <TransitionLink
@@ -90,19 +84,14 @@ export default function Navbar() {
                 href={link.href}
                 className="type-caption font-normal group block"
               >
-                {/* Hover Opacity Efekti Buradadır.
-                    Parent'ta blend mode olduğu için bu opacity değişimi de blend olur. */}
-                <ScrambleText
-                  shuffleDuration={0.4}
-                  className="hover:opacity-50 transition-opacity"
-                >
+                <ScrambleText className="hover:opacity-50 transition-opacity">
                   {link.label}
                 </ScrambleText>
               </TransitionLink>
             ))}
           </div>
 
-          {/* SAĞ BLOK: CTA */}
+          {/* CTA */}
           <div className="col-span-2 col-start-11 text-right pointer-events-auto">
             <TransitionLink
               href="/contact"
@@ -113,35 +102,25 @@ export default function Navbar() {
           </div>
         </div>
 
-        {/* MOBILE HEADER */}
+        {/* MOBİL HEADER */}
         <div className="flex md:hidden justify-between items-center w-full pointer-events-auto">
           <div className="overflow-hidden h-[1.5em] w-3/4">
-            <TransitionLink
-              href="/"
-              className="type-caption uppercase tracking-widest font-normal block"
-              onClick={() => setIsOpen(false)}
-            >
+            <TransitionLink href="/" onClick={() => setIsOpen(false)}>
               <div
                 className={clsx(
-                  "flex flex-col transition-transform duration-700 ease-[cubic-bezier(0.76,0,0.24,1)]",
+                  "flex flex-col transition-transform duration-700",
                   isScrolled ? "-translate-y-1/2" : "translate-y-0"
                 )}
               >
                 <div className="h-[1.5em] flex items-center leading-none">
-                  <span className="whitespace-nowrap">
-                    World-Class Innovation Hub
-                  </span>
+                  <span className="whitespace-nowrap">Innovation Hub</span>
                 </div>
-                {/* Mobilde de aynı leading-none ve pt-1 tekniği */}
                 <div className="h-[1.5em] flex items-center pt-1 leading-none">
-                  <span className="whitespace-nowrap font-bold">
-                    XVI® INTERACTIVE
-                  </span>
+                  <span className="whitespace-nowrap font-bold">XVI®</span>
                 </div>
               </div>
             </TransitionLink>
           </div>
-
           <button
             onClick={() => setIsOpen(!isOpen)}
             className="uppercase tracking-widest type-caption font-normal z-50 relative"
@@ -151,7 +130,7 @@ export default function Navbar() {
         </div>
       </nav>
 
-      {/* MOBILE MENU OVERLAY (Blend Yok - Düz Siyah) */}
+      {/* MOBİL MENÜ OVERLAY (Linkler Güncellendi) */}
       <div
         className={clsx(
           "fixed inset-0 bg-black text-white z-[990] flex flex-col justify-center items-center gap-8 transition-transform duration-500 ease-in-out md:hidden",
@@ -171,7 +150,7 @@ export default function Navbar() {
         <TransitionLink
           href="/contact"
           onClick={() => setIsOpen(false)}
-          className="type-caption font-normal uppercase tracking-widest mt-8 border border-white/20 px-6 py-3"
+          className="type-caption mt-8 border border-white/20 px-6 py-3"
         >
           <ScrambleText>Start a Project</ScrambleText>
         </TransitionLink>

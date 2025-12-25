@@ -26,30 +26,15 @@ export default function GridDebugger() {
             key={i}
             className={clsx(
               "h-full border-x",
-
-              // --- GÖRÜNÜRLÜK AYARLARI ---
-              // Mobilde (Varsayılan): Sadece ilk 4'ü göster, gerisini gizle (hidden)
-              i >= 4 ? "hidden" : "block",
-
-              // Tablette (md): İlk 8'i göster (block), 8 ve sonrasını gizle (hidden)
-              // md:block diyerek 4-7 arasını açıyoruz.
-              i >= 4 && i < 8 && "md:block",
-              // md:hidden diyerek 8 ve sonrasını tablette gizli tutuyoruz (önemli düzeltme)
+              i >= 4 ? "hidden" : "block", // Mobil: ilk 4
+              i >= 4 && i < 8 && "md:block", // Tablet: ilk 8
               i >= 8 && "md:hidden",
-
-              // Desktopta (lg): Hepsini göster (block)
-              i >= 8 && "lg:block",
-
-              // --- RENK AYARLARI ---
-              // Mobil: Kırmızı
+              i >= 8 && "lg:block", // Desktop: hepsi
               "bg-red-500/10 border-red-500/20",
-              // Tablet: Mavi
               "md:bg-blue-500/10 md:border-blue-500/20",
-              // Desktop: Yeşil
               "lg:bg-emerald-500/10 lg:border-emerald-500/20"
             )}
           >
-            {/* İç dolgu rengi de değişsin */}
             <div
               className={clsx(
                 "w-full h-full opacity-50",
